@@ -1,0 +1,19 @@
+aws elbv2 create-load-balancer --name Lab4 --type application --scheme internet-facing --subnets subnet-6c825b20 subnet-9874bfe4
+  361  aws ec2 create-security-group --group-name Lab4 --description lab4
+  362  aws ec2 create-security-group --group-name Labaratorna4 --description lab4
+  363  aws ec2 authorize-security-group-ingress --group-id sg-0e366e90d9c286a5f --protocol tcp --port 80 --cidr 0.0.0.0/0
+  364  aws ec2 authorize-security-group-ingress --group-id sg-07409fac22b5886b3 --protocol tcp --port 80 --cidr 0.0.0.0/0
+  365  aws elbv2 set-security-groups --load-balancer-arn arn:aws:elasticloadbalancing:eu-central-1:198118129168:loadbalancer/app/Lab4/124b9cdf4693343d
+  366  aws elbv2 set-security-groups --load-balancer-arn arn:aws:elasticloadbalancing:eu-central-1:198118129168:loadbalancer/app/Lab4/124b9cdf4693343d --security-groups sg-07409fac22b5886b3
+  367  cd..
+  368  cd ..
+  369  cd LoadBalancer
+  370  aws ec2 run-instances --image-id ami-0bd39c806c2335b95 --count 1 --instance-type t2.micro --key-name LoadBalancer  --associate-public-ip-address --security-group-ids sg-07409fac22b5886b3 --user-data file://UserData.sh
+  371  aws ec2 run-instances --image-id ami-0bd39c806c2335b95 --count 1 --instance-type t2.micro --key-name LoadBalancer  --associate-public-ip-address --security-group-ids sg-07409fac22b5886b3 --user-data file://UserData1.sh
+  372  aws elbv2 create-target-group --name Lab4 --target-type instance --protocol HTTP --port 80 --vpc-id vpc-11bf0b7b
+  373  aws elbv2 register-targets --target-group-arn arn:aws:elasticloadbalancing:eu-central-1:198118129168:targetgroup/Lab4/c34098c4392278fc --targets i-0ee412efef81342d1 i-0625bded5788f9be8
+  374  aws elbv2 register-targets --target-group-arn arn:aws:elasticloadbalancing:eu-central-1:198118129168:targetgroup/Lab4/c34098c4392278fc --targets Id= i-0ee412efef81342d1 Id=i-0625bded5788f9be8
+  375  aws elbv2 register-targets --target-group-arn arn:aws:elasticloadbalancing:eu-central-1:198118129168:targetgroup/Lab4/c34098c4392278fc --targets Id=-0625bded5788f9be8 Id= i-0ee412efef81342d
+  376  -0625bded5788f9be8
+  377  aws elbv2 register-targets --target-group-arn arn:aws:elasticloadbalancing:eu-central-1:198118129168:targetgroup/Lab4/c34098c4392278fc --targets Id=i-0625bded5788f9be8  Id=i-0ee412efef81342d1
+  378  aws elbv2 create-listener --load-balancer-arn arn:aws:elasticloadbalancing:eu-central-1:198118129168:loadbalancer/app/Lab4/124b9cdf4693343d --protocol HTTP --port 80 --default-actions Type=forward,TargetGroupArn=arn:aws:elasticloadbalancing:eu-central-1:198118129168:targetgroup/Lab4/c34098c4392278fc
